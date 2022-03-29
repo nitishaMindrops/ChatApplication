@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
 
 var name;
 var users = [];
+var LoggedInUser;
 io.on('connection', (socket) => {
     console.log('new user connected');
     
@@ -28,12 +29,15 @@ io.on('connection', (socket) => {
             id: socket.id,
             username: username
         });
+       // console.log("Active Users", users);
+        //const LogUser = users.find(user => user.id == socket.id);
+       // console.log("LogInUser", LogUser.username);
+      //  console.log("Total Users:", users);
+
+       // LoggedInUser = users.filter(function (user) { return user.id != LogUser.id });
+       // console.log(LoggedInUser);
 
         io.emit('user status', `${JSON.stringify(users)}`);
-        //UsersListArray.push(name); 
-
-        //console.log(UsersListArray);
-        //console.log(socket.id);
     });
     
     socket.on('disconnect', () => {

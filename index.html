@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ChatRoom</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <script>
+		var name = prompt("Please enter your name");
+    </script>
+</head>
+<body>
+
+    <div id="intro">
+        <h1>ChatRoom</h1>
+        <h2 id="logInUser"></h2>
+        <div class="status">
+            <h3>Online Users</h3>
+            <ul id="userStatus"></ul>
+        </div>
+    </div>
+
+    <ul id="messages"></ul>
+
+    <form action="">
+        <input id="m" placeholder="Enter your message..." autocomplete="off" required /><button>Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+
+        var socket = io();
+
+        socket.emit('joining msg', name);
+
+        $('#logInUser').html(name);
+            $('form').submit(function (e) {
+                e.preventDefault(); 
+                socket.emit('chat message', (name + ':  ' + $('#m').val()));
+                $('#messages').append($('<li id="list">').text('You:  ' + $('#m').val()));
+                $('#m').val('');
+                return false;
+            });
+        
+
+        socket.on('chat message', function (msg) {
+            console.log(msg);
+                $('#messages').append($('<li>').text(msg));
+            });
+
+            socket.on('user status', function (onlineUsers) {
+                $('#userStatus').empty();
+                var onlineUsersList = JSON.parse(onlineUsers);
+                $.each(onlineUsersList, function (key, value) {
+                    $('#userStatus').append($('<li>').text(value.username));
+                });
+                
+            })
+
+        socket.on('user offline status', function (username) {
+            console.log(username);
+            $('#userStatus').remove($('<li>').text(username));
+        })
+
+    </script>
+    
+</body>
+</html>
