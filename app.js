@@ -41,9 +41,9 @@ io.on('connection', (socket) => {
         //console.log(name);
         //name = username;
         const DisconnectedUser = users.find(user => user.id == socket.id);
-        console.log("Disconnected User:", DisconnectedUser);
+       console.log("Disconnected User:", DisconnectedUser);
         io.emit('chat message', `---${DisconnectedUser.username} left the chat---`);
-        console.log("Total Users:",users);
+       // console.log("Total Users:",users);
         users = users.filter(function (user) { return user.id != DisconnectedUser.id });
        
         io.emit('user offline status', `${DisconnectedUser.username}`);
@@ -55,8 +55,11 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000, () => {
-    console.log('Server listening on :3000');
+//server.listen(3000, () => {
+   // console.log('Server listening on :3000');
+//});
+server.listen(process.env.PORT || 5000, () => {
+     console.log('Server listening on :5000');
 });
 
 //function hasNetwork(online) {
