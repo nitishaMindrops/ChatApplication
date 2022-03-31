@@ -65,3 +65,16 @@ form {
 .status ul li{
     text-align:justify;
 }
+
+.navbar {
+    overflow: hidden;
+    background-color: #464343;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height:60px;
+    padding-left:9px;
+    padding-right:15px;
+    color:white;
+   font-weight:200;
+}
