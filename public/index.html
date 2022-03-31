@@ -21,6 +21,7 @@
     </div>
 
     <ul id="messages"></ul>
+    <div id="TypingStatus"></div>
 
     <form action="">
         <input id="m" placeholder="Enter your message..." autocomplete="off" required /><button>Send</button>
@@ -28,6 +29,38 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        var timeout;
+        $(document).ready(function () {
+            $('#m').keypress((e) => {
+                if (e.which != 13) {
+                    
+                    typing = true
+                    socket.emit('typing', { user: name, typing: true })
+                    clearTimeout(timeout)
+                    timeout = setTimeout(typingTimeout, 3000)
+                } else {
+                    clearTimeout(timeout)
+                    typingTimeout()
+                    console.log("time out");
+                   // sendMessage()
+                }
+            })
+
+            socket.on('display', (data) => {
+                if (data.typing == true)
+                    $('#TypingStatus').text(`${data.user} is typing...`)
+                else
+                    $('#TypingStatus').text("")
+            })
+            console.log(data);
+        })
+
+        function typingTimeout() {
+            typing = false
+            socket.emit('typing', { user: name, typing: false })
+        }
+    </script>
     <script>
 
         var socket = io();
@@ -40,6 +73,7 @@
                 socket.emit('chat message', (name + ':  ' + $('#m').val()));
                 $('#messages').append($('<li id="list">').text('You:  ' + $('#m').val()));
                 $('#m').val('');
+                typingTimeout();
                 return false;
             });
         
@@ -62,7 +96,6 @@
             console.log(username);
             $('#userStatus').remove($('<li>').text(username));
         })
-
     </script>
     
 </body>

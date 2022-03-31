@@ -15,7 +15,8 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-
+var typing = false;
+var timeout = undefined;
 var name;
 var users = [];
 var LoggedInUser;
@@ -35,11 +36,21 @@ io.on('connection', (socket) => {
       //  console.log("Total Users:", users);
 
        // LoggedInUser = users.filter(function (user) { return user.id != LogUser.id });
-       // console.log(LoggedInUser);
+       //console.log(LoggedInUser);
 
         io.emit('user status', `${JSON.stringify(users)}`);
+
+        
     });
-    
+
+    socket.on('typing', (data) => {
+        if (data.typing == true)
+            io.emit('display', data)
+        else
+            io.emit('display', data)
+        console.log(data);
+    })
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
         //console.log(name);
@@ -59,37 +70,8 @@ io.on('connection', (socket) => {
     });
 });
 
-//server.listen(3000, () => {
-   // console.log('Server listening on :3000');
-//});
 server.listen(process.env.PORT || 5000, () => {
      console.log('Server listening on :5000');
 });
 
-//function hasNetwork(online) {
-//    const element = document.querySelector(".status");
-//    // Update the DOM to reflect the current status
-//    if (online) {
-//        element.classList.remove("offline");
-//        element.classList.add("online");
-//        element.innerText = "Online";
-//    } else {
-//        element.classList.remove("online");
-//        element.classList.add("offline");
-//        element.innerText = "Offline";
-//    }
-//}
-//if (typeof window !== "undefined") {
 
-//    window.addEventListener("load", () => {
-//        hasNetwork(navigator.onLine);
-//        window.addEventListener("online", () => {
-//            // Set hasNetwork to online when they change to online.
-//            hasNetwork(true);
-//        });
-//        window.addEventListener("offline", () => {
-//            // Set hasNetwork to offline when they change to offline.
-//            hasNetwork(false);
-//        });
-//    });
-//}
